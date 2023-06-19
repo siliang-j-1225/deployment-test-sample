@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Replace with your Application Insights instrumentation key
-INSTRUMENTATION_KEY="<Your-Instrumentation-Key>"
+INSTRUMENTATION_KEY="$APP_INSIGHT_INSTRUMENTATION_KEY"
 
 # Replace with your build ID
-BUILD_ID="<Your-Build-ID>"
+BUILD_ID="$APP_INSIGHT_BUILD_ID"
 
 # Event name and BuildID property
 EVENT_NAME="LoadTest:Start"
