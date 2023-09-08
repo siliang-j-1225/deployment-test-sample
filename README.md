@@ -8,19 +8,67 @@ Deploying a complex system can be a challenging task, especially when the system
 
 That's where deployment testing comes in. Deployment testing is the process of verifying that a system can be deployed and operates correctly in a production-like environment. By testing the system before deployment, you can identify potential issues and ensure that the system is ready to handle real-world scenarios.
 
+Your content is clear, but I'll suggest a refined version that improves the flow and structure. Here's my take:
+
+---
+
+### System Overview
+
+Consider a typical data processing architecture as illustrated below:
+
+1. **Data Layer**: Both streaming and batch data are channeled into a storage account.
+2. **Processing Layer**: Spark jobs ingest this data and subsequently store the results back into the storage account.
+3. **API Layer**: APIs, hosted on a Kubernetes cluster, fetch data from storage and relay it to the client.
+
+![example system arc](.assets/images/example-system.png)
+
+### Deployment Considerations
+
+With every version update of this system, it's imperative to ensure two key aspects:
+
+1. **Deployment Correctness**: The system is correctly deployed without any hitches or errors.
+2. **Functional Integrity**: The system continues to function as expected post-deployment.
+
+To achieve this, a comprehensive suite of test cases must be executed. Here are some sample test cases for different components of our system:
+
+#### Kafka Test Cases:
+1. Validate the installed Kafka version.
+2. Confirm the number of brokers.
+3. Test Kafka's connection acceptance.
+4. Verify the connection between Kafka and Zookeeper.
+...
+
+#### Spark Test Cases:
+1. Confirm the installed Spark version.
+2. Ensure a Spark session can be initiated.
+3. Test Spark's capability to execute a basic computation job.
+...
+
+#### Kubernetes Test Cases:
+1. Verify the status of nodes.
+2. Confirm the total number of nodes.
+3. Check deployments in the default namespace.
+...
+
+Given the complexity and interdependence of these components, the number of test cases can quickly escalate to the hundreds or even thousands. Maintaining such a vast suite is no trivial task.
+
+In the subsequent section, we introduce a sample solution that leverages *bats-core*, a testing framework designed for Bash scripts. This framework streamlines the management of a large volume of test cases, making the process more efficient and maintainable.
+
+We have also created a series of sample test cases for above mentioned components, which can be found in the [src/test_scripts](src/test_scripts) folder. These test cases can be used as a reference for writing your own test cases.
+- ts100x.sh --> Spark test cases
+- ts200x.sh --> Kafka test cases
+- ts300x.sh --> Kubernetes test cases
+
 ### Our Solution
 
 This sample shows a flexible and easy-to-use testing solution which helps to write effective test cases and accelerate application delivery. We focus on deployment tests to ensure the reliability and correctness of the system, and can tailor our solution to meet the specific needs of any environment. 
 
 While we use *bats-core* as an example tool, there are also other testing tools available that can achieve the desired testing outcomes. 
 
+![](.assets/images/arch-diagram.png)
 
-### Why *bats-core*?
-We choose *bats-core* for the following reasons:
-- It's simple and familiar for developers.  
-- It's flexibable.  
-- Enable parallel execution.  
-- TAP Compliance.  
+
+
 
 ## Getting Started
 
@@ -39,7 +87,12 @@ git submodule add https://github.com/bats-core/bats-support.git submodules/test_
 git submodule add https://github.com/bats-core/bats-assert.git submodules/bats-assert
 ```
 
-
+### Why *bats-core*?
+We choose *bats-core* for the following reasons:
+- It's simple and familiar for developers.  
+- It's flexibable.  
+- Enable parallel execution.  
+- TAP Compliance.  
 
 ### Running the Sample
 Copy **.env.sh** to **dev.env.sh**. You don't need to change anything in this file, as the `MOCKING` is set to `1` and test cases will always return `0` (success) in this mode. 
@@ -214,6 +267,3 @@ curl --location --request POST "$adoRestAPIBaseUrl$projectId/_apis/test/Runs/$te
     "FileName": "'$test_logs_zip_file'"
 }'
 ```
-
-## Contributing
-Feel free to create an issue first.
